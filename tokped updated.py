@@ -15,7 +15,7 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), opti
 wait = WebDriverWait(driver, 10)
 
 # --- Link etalase toko ---
-etalase_url = "https://www.tokopedia.com/enterkomputer/etalase/office"
+etalase_url = "https://www.tokopedia.com/enterkomputer/etalase/gaming-mouse?sort=11"
 driver.get(etalase_url)
 time.sleep(3)
 
