@@ -15,7 +15,7 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), opti
 wait = WebDriverWait(driver, 10)
 
 # --- Link etalase toko ---
-etalase_url = "https://www.tokopedia.com/enterkomputer/etalase/gaming-mouse?sort=11"
+etalase_url = "https://www.tokopedia.com/goodgamingshop/etalase/gaming-mouse?sort=11"
 driver.get(etalase_url)
 time.sleep(3)
 
@@ -69,6 +69,11 @@ for link in produk_links:
         nama = "-"
 
     try:
+        Nama_toko = driver.find_element(By.CSS_SELECTOR, '[data-testid="llbPDPFooterShopName"]').text
+    except:
+        Nama_toko = "-"
+
+    try:
         harga = driver.find_element(By.CSS_SELECTOR, '[data-testid="lblPDPDetailProductPrice"]').text
     except:
         harga = "-"
@@ -79,7 +84,6 @@ for link in produk_links:
     except:
         banyak_terjual = "-"
 
-    
     try:
         rating = driver.find_element(By.CSS_SELECTOR, '[data-testid="lblPDPDetailProductRatingNumber"]').text
     except:
@@ -97,13 +101,13 @@ for link in produk_links:
     except Exception as e:
         print("⚠️ Gagal ambil komentar:", e)
 
-    produk_list.append([nama, harga, banyak_terjual, rating, link, komentar])
+    produk_list.append([nama, Nama_toko, harga, banyak_terjual, rating, link, komentar])
     print(f"✅ Data produk: {nama}")
 
 # --- Simpan ke CSV ---
-with open("tokopedia_enterkomputer.csv", mode="w", newline="", encoding="utf-8") as file:
+with open("tokopedia_GGS.csv", mode="w", newline="", encoding="utf-8") as file:
     writer = csv.writer(file)
-    writer.writerow(["Nama", "Harga", "banyak_terjual", "Rating", "Link", "Komentar"])
+    writer.writerow(["Nama","Nama_Toko" ,"Harga", "banyak_terjual", "Rating", "Link", "Komentar"])
     writer.writerows(produk_list)
 
 driver.quit()
