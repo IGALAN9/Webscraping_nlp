@@ -74,9 +74,11 @@ for link in produk_links:
         harga = "-"
 
     try:
-        banyak_terjual = driver.find_element(By.CSS_SELECTOR, '[data-testid="lblPDPDetailProductSoldCounter"]').text
+        sold_element = driver.find_element(By.CSS_SELECTOR, '[data-testid="lblPDPDetailProductSoldCounter"]')
+        banyak_terjual = sold_element.text.replace("Terjual", "").strip()
     except:
         banyak_terjual = "-"
+
     
     try:
         rating = driver.find_element(By.CSS_SELECTOR, '[data-testid="lblPDPDetailProductRatingNumber"]').text
