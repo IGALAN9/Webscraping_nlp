@@ -15,7 +15,7 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), opti
 wait = WebDriverWait(driver, 10)
 
 # --- Link etalase toko ---
-etalase_url = "https://www.tokopedia.com/goodgamingshop/etalase/gaming-monitor"
+etalase_url = "https://www.tokopedia.com/enterkomputer/etalase/gaming-mouse?sort=11"
 driver.get(etalase_url)
 time.sleep(3)
 
@@ -94,7 +94,7 @@ for link in produk_links:
     print(f"✅ Data produk: {nama}")
 
 # --- Simpan ke CSV ---
-with open("tokopedia_gamingmonitor.csv", mode="w", newline="", encoding="utf-8") as file:
+with open("tokopedia_enterkomputer.csv", mode="w", newline="", encoding="utf-8") as file:
     writer = csv.writer(file)
     writer.writerow(["Nama", "Harga", "Rating", "Link", "Komentar"])
     writer.writerows(produk_list)
