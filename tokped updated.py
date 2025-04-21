@@ -4,19 +4,33 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException, WebDriverException
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 import csv
+import os
 
-options = Options()
-options.add_argument("--start-maximized")
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+def create_driver():
+    options = Options()
+    options.add_argument("--start-maximized")
+    options.add_argument("--disable-blink-features=AutomationControlled")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    # options.add_argument("--headless=new")  # Uncomment kalau mau headless
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver.set_page_load_timeout(60)
+    return driver
+
+# Mulai driver pertama
+driver = create_driver()
 wait = WebDriverWait(driver, 10)
 
-etalase_url = "https://www.tokopedia.com/clover-gaming/etalase/gear-mouse?sort=11"
+etalase_url = "https://www.tokopedia.com/sylargaming/etalase/mouse-gaming?sort=11"
 driver.get(etalase_url)
 time.sleep(3)
 
+# Scroll sampai mentok
 last_count = 0
 scroll_pause_time = 2
 max_scroll_attempts = 10
@@ -25,12 +39,10 @@ scroll_attempts = 0
 while True:
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     time.sleep(scroll_pause_time)
-
     produk_cards = driver.find_elements(By.CSS_SELECTOR, 'div[data-testid="master-product-card"] a')
     current_count = len(produk_cards)
-
     print(f" Produk saat ini: {current_count}")
-
+    
     if current_count == last_count:
         scroll_attempts += 1
     else:
@@ -50,11 +62,26 @@ for card in produk_cards:
 produk_links = list(produk_links)
 print(f" Total link produk unik ditemukan: {len(produk_links)}")
 
-produk_list = []
+# Buat file CSV dengan header
+csv_file = "tokopedia_sylargaming.csv"
+if not os.path.exists(csv_file):
+    with open(csv_file, mode="w", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Nama", "Nama_Toko", "Harga", "banyak_terjual", "Rating", "Link", "Komentar"])
 
+# Mulai scraping detail produk
+for index, link in enumerate(produk_links):
+    if index > 0 and index % 10 == 0:
+        driver.quit()
+        print(" 🔄 Restart driver untuk menjaga stabilitas...")
+        driver = create_driver()
 
-for link in produk_links:
-    driver.get(link)
+    try:
+        driver.get(link)
+    except (TimeoutException, WebDriverException) as e:
+        print(f"[{index+1}] Gagal buka link (Timeout/Crash): {link}")
+        continue
+
     time.sleep(3)
 
     try:
@@ -92,15 +119,14 @@ for link in produk_links:
         komentar_list = [el.text.strip() for el in komentar_elements[:3]]
         komentar = " || ".join(komentar_list)
     except Exception as e:
-        print(" Gagal ambil komentar:", e)
+        komentar = "-"
+        print(f"[{index+1}] Gagal ambil komentar")
 
-    produk_list.append([nama, Nama_toko, harga, banyak_terjual, rating, link, komentar])
-    print(f" Data produk: {nama}")
+    with open(csv_file, mode="a", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file)
+        writer.writerow([nama, Nama_toko, harga, banyak_terjual, rating, link, komentar])
 
-with open("tokopedia_Clover.csv", mode="w", newline="", encoding="utf-8") as file:
-    writer = csv.writer(file)
-    writer.writerow(["Nama","Nama_Toko" ,"Harga", "banyak_terjual", "Rating", "Link", "Komentar"])
-    writer.writerows(produk_list)
+    print(f"[{index+1}] ✅ Tersimpan: {nama}")
 
 driver.quit()
-print(" Selesai! Data disimpan di 'hasil_scrapping.csv'")
+print(" ✅ Selesai! Semua data disimpan di 'tokopedia_Clover.csv'")
