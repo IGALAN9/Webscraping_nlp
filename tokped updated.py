@@ -8,33 +8,28 @@ from webdriver_manager.chrome import ChromeDriverManager
 import time
 import csv
 
-# --- Setup WebDriver ---
 options = Options()
 options.add_argument("--start-maximized")
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 wait = WebDriverWait(driver, 10)
 
-# --- Link etalase toko ---
-etalase_url = "https://www.tokopedia.com/goodgamingshop/etalase/gaming-mouse?sort=11"
+etalase_url = "https://www.tokopedia.com/clover-gaming/etalase/gear-mouse?sort=11"
 driver.get(etalase_url)
 time.sleep(3)
 
-# --- Scroll otomatis untuk load semua produk ---
 last_count = 0
 scroll_pause_time = 2
 max_scroll_attempts = 10
 scroll_attempts = 0
 
 while True:
-    # Scroll ke bawah
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     time.sleep(scroll_pause_time)
 
-    # Hitung jumlah produk saat ini
     produk_cards = driver.find_elements(By.CSS_SELECTOR, 'div[data-testid="master-product-card"] a')
     current_count = len(produk_cards)
 
-    print(f"📦 Produk saat ini: {current_count}")
+    print(f" Produk saat ini: {current_count}")
 
     if current_count == last_count:
         scroll_attempts += 1
@@ -43,10 +38,9 @@ while True:
         last_count = current_count
 
     if scroll_attempts >= max_scroll_attempts:
-        print("✅ Sudah mencapai akhir halaman.")
+        print(" Sudah mencapai akhir halaman.")
         break
 
-# --- Ambil semua link produk dari etalase ---
 produk_links = set()
 for card in produk_cards:
     href = card.get_attribute("href")
@@ -54,11 +48,11 @@ for card in produk_cards:
         produk_links.add(href)
 
 produk_links = list(produk_links)
-print(f"🔗 Total link produk unik ditemukan: {len(produk_links)}")
+print(f" Total link produk unik ditemukan: {len(produk_links)}")
 
 produk_list = []
 
-# --- Kunjungi tiap produk ---
+
 for link in produk_links:
     driver.get(link)
     time.sleep(3)
@@ -89,7 +83,6 @@ for link in produk_links:
     except:
         rating = "-"
 
-    # --- Scroll agar komentar muncul ---
     driver.execute_script("window.scrollTo(0, 1500);")
     time.sleep(2)
 
@@ -99,16 +92,15 @@ for link in produk_links:
         komentar_list = [el.text.strip() for el in komentar_elements[:3]]
         komentar = " || ".join(komentar_list)
     except Exception as e:
-        print("⚠️ Gagal ambil komentar:", e)
+        print(" Gagal ambil komentar:", e)
 
     produk_list.append([nama, Nama_toko, harga, banyak_terjual, rating, link, komentar])
-    print(f"✅ Data produk: {nama}")
+    print(f" Data produk: {nama}")
 
-# --- Simpan ke CSV ---
-with open("tokopedia_GGS.csv", mode="w", newline="", encoding="utf-8") as file:
+with open("tokopedia_Clover.csv", mode="w", newline="", encoding="utf-8") as file:
     writer = csv.writer(file)
     writer.writerow(["Nama","Nama_Toko" ,"Harga", "banyak_terjual", "Rating", "Link", "Komentar"])
     writer.writerows(produk_list)
 
 driver.quit()
-print("🎉 Selesai! Data disimpan di 'hasil_scrapping.csv'")
+print(" Selesai! Data disimpan di 'hasil_scrapping.csv'")
