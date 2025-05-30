@@ -39,7 +39,7 @@ scroll_attempts = 0
 while True:
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     time.sleep(scroll_pause_time)
-    produk_cards = driver.find_elements(By.CSS_SELECTOR, 'div[class*="css-79elbk"] a')
+    produk_cards = driver.find_elements(By.CSS_SELECTOR, 'div[class*="css-tjjb18"] a')
     current_count = len(produk_cards)
     print(f" Produk saat ini: {current_count}")
     
