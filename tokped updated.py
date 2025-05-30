@@ -26,7 +26,7 @@ def create_driver():
 driver = create_driver()
 wait = WebDriverWait(driver, 10)
 
-etalase_url = "https://www.tokopedia.com/nanokomputer/etalase/geforce-rtx-40-series"
+etalase_url = "https://www.tokopedia.com/nanokomputer/etalase/asus-amayzingdeals"
 driver.get(etalase_url)
 time.sleep(3)
 
@@ -39,7 +39,7 @@ scroll_attempts = 0
 while True:
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     time.sleep(scroll_pause_time)
-    produk_cards = driver.find_elements(By.CSS_SELECTOR, 'a[href*="tokopedia.com"]')
+    produk_cards = driver.find_elements(By.CSS_SELECTOR, 'div[class*="css-79elbk"] a')
     current_count = len(produk_cards)
     print(f" Produk saat ini: {current_count}")
     
@@ -63,7 +63,7 @@ produk_links = list(produk_links)
 print(f" Total link produk unik ditemukan: {len(produk_links)}")
 
 # Buat file CSV dengan header
-csv_file = "tokopedia_sylargaming.csv"
+csv_file = "tokopedia_datatesting.csv"
 if not os.path.exists(csv_file):
     with open(csv_file, mode="w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
