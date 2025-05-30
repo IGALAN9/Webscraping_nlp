@@ -26,7 +26,7 @@ def create_driver():
 driver = create_driver()
 wait = WebDriverWait(driver, 10)
 
-etalase_url = "https://www.tokopedia.com/sylargaming/etalase/mouse-gaming?sort=11"
+etalase_url = "https://www.tokopedia.com/nanokomputer/etalase/geforce-rtx-40-series"
 driver.get(etalase_url)
 time.sleep(3)
 
@@ -39,7 +39,7 @@ scroll_attempts = 0
 while True:
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     time.sleep(scroll_pause_time)
-    produk_cards = driver.find_elements(By.CSS_SELECTOR, 'div[data-testid="master-product-card"] a')
+    produk_cards = driver.find_elements(By.CSS_SELECTOR, 'a[href*="tokopedia.com"]')
     current_count = len(produk_cards)
     print(f" Produk saat ini: {current_count}")
     
