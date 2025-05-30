@@ -17,12 +17,11 @@ def create_driver():
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    # options.add_argument("--headless=new")  # Uncomment kalau mau headless
+
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     driver.set_page_load_timeout(60)
     return driver
 
-# Mulai driver pertama
 driver = create_driver()
 wait = WebDriverWait(driver, 10)
 
@@ -30,7 +29,7 @@ etalase_url = "https://www.tokopedia.com/nanokomputer/etalase/asus-amayzingdeals
 driver.get(etalase_url)
 time.sleep(3)
 
-# Scroll sampai mentok
+
 last_count = 0
 scroll_pause_time = 2
 max_scroll_attempts = 10
@@ -62,14 +61,14 @@ for card in produk_cards:
 produk_links = list(produk_links)
 print(f" Total link produk unik ditemukan: {len(produk_links)}")
 
-# Buat file CSV dengan header
+
 csv_file = "tokopedia_datatesting.csv"
 if not os.path.exists(csv_file):
     with open(csv_file, mode="w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
         writer.writerow(["Nama", "Nama_Toko", "Harga", "banyak_terjual", "Rating", "Link", "Komentar"])
 
-# Mulai scraping detail produk
+
 for index, link in enumerate(produk_links):
     if index > 0 and index % 10 == 0:
         driver.quit()
