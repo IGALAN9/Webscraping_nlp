@@ -4,15 +4,16 @@ Untuk memulai Stockflow ini dapat dimulai dengan:
 
 1.**clone repository**
 ```
-https://github.com/IGALAN9/Stockflow.git
+https://github.com/IGALAN9/Webscraping_nlp.git
 ```
 
-2.**install dependencies**
+2.**Insert link**
 ```
-npm install
+Masukan link kedalam line 28 
+etalase_url = "masukan disini"
 ```
 
 3.**Run the program**
 ```
-npm run start
+run the program using pyhton
 ```
