@@ -13,13 +13,13 @@ https://github.com/IGALAN9/Webscraping_nlp.git
 pip install selenium webdriver-manager
 ```
 
-3.**Insert link**
+4.**Insert link**
 ```
 Masukan link kedalam line 28 
 etalase_url = "masukan disini"
 ```
 
-4.**Run the program**
+5.**Run the program**
 ```
 run the program using pyhton
 ```
