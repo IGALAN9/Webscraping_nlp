@@ -8,13 +8,13 @@ https://github.com/IGALAN9/Webscraping_nlp.git
 ```
 2.**Gunakan tokopedia_updated.py**
 
-2.**Insert link**
+3.**Insert link**
 ```
 Masukan link kedalam line 28 
 etalase_url = "masukan disini"
 ```
 
-3.**Run the program**
+4.**Run the program**
 ```
 run the program using pyhton
 ```
