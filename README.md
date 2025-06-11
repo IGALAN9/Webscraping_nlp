@@ -6,6 +6,7 @@ Untuk memulai Stockflow ini dapat dimulai dengan:
 ```
 https://github.com/IGALAN9/Webscraping_nlp.git
 ```
+2.**Gunakan tokopedia_updated.py**
 
 2.**Insert link**
 ```
