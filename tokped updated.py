@@ -26,14 +26,14 @@ def create_driver():
 driver = create_driver()
 wait = WebDriverWait(driver, 10)
 
-etalase_url = "Masukan-link-Disini" #Masukan link disini
+etalase_url = "Masukan-Link-Disini" #Masukan link disini
 driver.get(etalase_url)
 time.sleep(3)
 
 
 last_count = 0
 scroll_pause_time = 2
-max_scroll_attempts = 10
+max_scroll_attempts = 3
 scroll_attempts = 0
 
 def scroll_slowly_to_bottom(driver, delay=0.5, step=300):
@@ -47,9 +47,11 @@ def scroll_slowly_to_bottom(driver, delay=0.5, step=300):
         last_height = driver.execute_script("return document.body.scrollHeight") 
 
 while True:
-    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    time.sleep(scroll_pause_time)
-    produk_cards = driver.find_elements(By.CSS_SELECTOR, 'div[class*="css-tjjb18"] a')
+    scroll_slowly_to_bottom(driver, delay=0.3, step=300)
+    produk_cards = driver.find_elements(
+        By.CSS_SELECTOR,
+        'div[class*="css-tjjb18"] a, div[class*="css-jza1fo"] div[class*="css-5wh65g"] a'
+    )
     current_count = len(produk_cards)
     print(f" Produk saat ini: {current_count}")
     
