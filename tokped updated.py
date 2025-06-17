@@ -17,6 +17,7 @@ def create_driver():
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--enable-unsafe-swiftshader")
 
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     driver.set_page_load_timeout(60)
@@ -25,7 +26,7 @@ def create_driver():
 driver = create_driver()
 wait = WebDriverWait(driver, 10)
 
-etalase_url = "https://www.tokopedia.com/nanokomputer/etalase/asus-amayzingdeals"
+etalase_url = "https://www.tokopedia.com/psenterprise/etalase/accesoris-ps5"
 driver.get(etalase_url)
 time.sleep(3)
 
@@ -34,6 +35,16 @@ last_count = 0
 scroll_pause_time = 2
 max_scroll_attempts = 10
 scroll_attempts = 0
+
+def scroll_slowly_to_bottom(driver, delay=0.5, step=300):
+    last_height = driver.execute_script("return document.body.scrollHeight")
+    current_position = 0
+
+    while current_position < last_height:
+        driver.execute_script(f"window.scrollTo(0, {current_position});")
+        time.sleep(delay)
+        current_position += step
+        last_height = driver.execute_script("return document.body.scrollHeight") 
 
 while True:
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -65,7 +76,7 @@ print(f" Total link produk unik ditemukan: {len(produk_links)}")
 csv_file = "tokopedia_datatesting.csv"
 if not os.path.exists(csv_file):
     with open(csv_file, mode="w", newline="", encoding="utf-8") as file:
-        writer = csv.writer(file)
+        writer = csv.writer(file, delimiter=';')
         writer.writerow(["Nama", "Nama_Toko", "Harga", "banyak_terjual", "Rating", "Link", "Komentar"])
 
 
@@ -109,12 +120,11 @@ for index, link in enumerate(produk_links):
     except:
         rating = "-"
 
-    driver.execute_script("window.scrollTo(0, 1500);")
-    time.sleep(2)
+    scroll_slowly_to_bottom(driver, delay=0.3, step=300)
 
     komentar = ""
     try:
-        komentar_elements = driver.find_elements(By.CSS_SELECTOR, 'span[data-testid="lblItemUlasan"]')
+        komentar_elements = driver.find_elements(By.CSS_SELECTOR, 'section#review-feed span[data-testid="lblItemUlasan"]')
         komentar_list = [el.text.strip() for el in komentar_elements[:3]]
         komentar = " || ".join(komentar_list)
     except Exception as e:
@@ -122,7 +132,7 @@ for index, link in enumerate(produk_links):
         print(f"[{index+1}] Gagal ambil komentar")
 
     with open(csv_file, mode="a", newline="", encoding="utf-8") as file:
-        writer = csv.writer(file)
+        writer = csv.writer(file, delimiter=';')
         writer.writerow([nama, Nama_toko, harga, banyak_terjual, rating, link, komentar])
 
     print(f"[{index+1}] ✅ Tersimpan: {nama}")
