@@ -26,7 +26,7 @@ def create_driver():
 driver = create_driver()
 wait = WebDriverWait(driver, 10)
 
-etalase_url = "https://www.tokopedia.com/psenterprise/etalase/accesoris-ps5"
+etalase_url = "Masukan-link-Disini" #Masukan link disini
 driver.get(etalase_url)
 time.sleep(3)
 
@@ -73,7 +73,7 @@ produk_links = list(produk_links)
 print(f" Total link produk unik ditemukan: {len(produk_links)}")
 
 
-csv_file = "tokopedia_datatesting.csv"
+csv_file = "tokopedia_datatesting.csv" #Masukan nama disini
 if not os.path.exists(csv_file):
     with open(csv_file, mode="w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file, delimiter=';')
@@ -138,4 +138,4 @@ for index, link in enumerate(produk_links):
     print(f"[{index+1}] ✅ Tersimpan: {nama}")
 
 driver.quit()
-print(" ✅ Selesai! Semua data disimpan di 'tokopedia_Clover.csv'")
+print(" ✅ Selesai! Semua data disimpan di CSV")
